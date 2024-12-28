@@ -1,25 +1,39 @@
-@model List<Transaction>
+@using ControlWork9.Services
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model ControlWork9.ViewModels.TransactionHistoryViewModel
 
-<h3>Журнал транзакций</h3>
+<h3>История транзакций</h3>
 
-<table>
+<form asp-action="TransactionHistory">
+    <label for="dateFrom">Дата с:</label>
+    <input type="date" name="dateFrom" value="@Model.DateFrom?.ToString("yyyy-MM-dd")" />
+
+    <label for="dateTo">Дата по:</label>
+    <input type="date" name="dateTo" value="@Model.DateTo?.ToString("yyyy-MM-dd")" />
+
+    <button type="submit">Применить фильтр</button>
+</form>
+
+<div class="pt-5">
+<table class="table table-success">
     <thead>
     <tr>
         <th>Дата</th>
         <th>Сумма</th>
-        <th>Тип</th>
-        <th>Получатель/Отправитель</th>
+        <th>Тип транзакции</th>
+        <th>Контрагент</th>
     </tr>
     </thead>
     <tbody>
-    @foreach (var transaction in Model)
+    @foreach (var transaction in Model.Transactions)
     {
         <tr>
-            <td>@transaction.Date</td>
+            <td>@transaction.Date.ToString("dd.MM.yyyy HH:mm")</td>
             <td>@transaction.Amount</td>
             <td>@transaction.Type</td>
-            <td>@transaction.User</td>
+            <td>@(transaction.Type == TransactionType.Transfer ? (transaction.FromAccount.ToString() == User.Identity.Name ? transaction.ToAccount : transaction.FromAccount) : "Пополнение")</td>
         </tr>
     }
     </tbody>
 </table>
+</div>

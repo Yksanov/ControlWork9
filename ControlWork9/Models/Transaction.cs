@@ -5,7 +5,7 @@ namespace ControlWork9.Models;
 public class Transaction
 {
     public int Id { get; set; }
-    public DateTime Date { get; set; }
+    public DateOnly Date { get; set; } = DateOnly.FromDateTime(DateTime.Now);
     public decimal Amount { get; set; }
     public TransactionType  Type { get; set; }
     public int FromAccount { get; set; }

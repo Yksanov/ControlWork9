@@ -36,7 +36,7 @@ public class TransactionController : Controller
                 Amount = model.Amount,
                 Type = TransactionType.Deposit,
                 UserId = user.Id,
-                Date = DateTime.Now,
+                Date =DateOnly.FromDateTime(DateTime.Now),
                 FromAccount = user.AccountNumber,
                 ToAccount = model.ToAccount
             };
@@ -87,7 +87,7 @@ public class TransactionController : Controller
                 Type = TransactionType.Transfer,
                 FromAccount = sender.AccountNumber,
                 ToAccount = recipient.AccountNumber,
-                Date = DateTime.Now,
+                Date = DateOnly.FromDateTime(DateTime.Now),
                 UserId = sender.Id
             };
 
@@ -104,5 +104,42 @@ public class TransactionController : Controller
 
         return PartialView("_TransferFormPartialView", model);
     }
+    
+    //-----------------------------------------------------------
+    
+    public async Task<IActionResult> TransactionHistory(DateOnly? dateFrom, DateOnly? dateTo)
+    {
+        MyUser? user = await _userManager.GetUserAsync(User);
+
+        if (user == null)
+        {
+            return Unauthorized();
+        }
+        var transactionsQuery = _context.Transactions
+            .Where(t => t.UserId == user.Id);
+
+        if (dateFrom.HasValue)
+        {
+            transactionsQuery = transactionsQuery.Where(t => t.Date >= dateFrom.Value);
+        }
+
+        if (dateTo.HasValue)
+        {
+            transactionsQuery = transactionsQuery.Where(t => t.Date <= dateTo.Value);
+        }
+
+        var transactions = await transactionsQuery
+            .OrderByDescending(t => t.Date) 
+            .ToListAsync();
+        var model = new TransactionHistoryViewModel
+        {
+            DateFrom = dateFrom,
+            DateTo = dateTo,
+            Transactions = transactions
+        };
+
+        return View(model);
+    }
+
 
 }
