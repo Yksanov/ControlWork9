@@ -113,11 +113,12 @@ public class TransactionController : Controller
 
         if (user == null)
         {
-            return Unauthorized();
+            return Unauthorized(); 
         }
+
         var transactionsQuery = _context.Transactions
             .Where(t => t.UserId == user.Id);
-
+        
         if (dateFrom.HasValue)
         {
             transactionsQuery = transactionsQuery.Where(t => t.Date >= dateFrom.Value);
@@ -127,18 +128,18 @@ public class TransactionController : Controller
         {
             transactionsQuery = transactionsQuery.Where(t => t.Date <= dateTo.Value);
         }
-
+        
         var transactions = await transactionsQuery
-            .OrderByDescending(t => t.Date) 
+            .OrderByDescending(t => t.Date)
             .ToListAsync();
+        
         var model = new TransactionHistoryViewModel
         {
             DateFrom = dateFrom,
             DateTo = dateTo,
             Transactions = transactions
         };
-
-        return View(model);
+        return View(model); 
     }
 
 

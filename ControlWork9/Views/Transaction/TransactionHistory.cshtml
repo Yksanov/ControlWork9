@@ -3,37 +3,54 @@
 @model ControlWork9.ViewModels.TransactionHistoryViewModel
 
 <h3>История транзакций</h3>
-
-<form asp-action="TransactionHistory">
+<form asp-action="TransactionHistory" asp-controller="Transaction">
     <label for="dateFrom">Дата с:</label>
     <input type="date" name="dateFrom" value="@Model.DateFrom?.ToString("yyyy-MM-dd")" />
 
     <label for="dateTo">Дата по:</label>
     <input type="date" name="dateTo" value="@Model.DateTo?.ToString("yyyy-MM-dd")" />
 
-    <button type="submit">Применить фильтр</button>
+    <button class="btn btn-primary" type="submit">Применить фильтр</button>
 </form>
 
 <div class="pt-5">
-<table class="table table-success">
-    <thead>
-    <tr>
-        <th>Дата</th>
-        <th>Сумма</th>
-        <th>Тип транзакции</th>
-        <th>Контрагент</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var transaction in Model.Transactions)
-    {
+    <table class="table table-success">
+        <thead>
         <tr>
-            <td>@transaction.Date.ToString("dd.MM.yyyy HH:mm")</td>
-            <td>@transaction.Amount</td>
-            <td>@transaction.Type</td>
-            <td>@(transaction.Type == TransactionType.Transfer ? (transaction.FromAccount.ToString() == User.Identity.Name ? transaction.ToAccount : transaction.FromAccount) : "Пополнение")</td>
+            <th>Дата</th>
+            <th>Сумма</th>
+            <th>Тип транзакции</th>
+            <th>Контрагент</th>
         </tr>
-    }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        @foreach (var transaction in Model.Transactions)
+        {
+            <tr>
+                <td>@transaction.Date.ToString("dd.MM.yyyy")</td>
+                <td>@transaction.Amount</td>
+                <td>@transaction.Type</td>
+                <td>
+                    @if (transaction.Type == TransactionType.Transfer)
+                    {
+                        <span>
+                            @if (transaction.FromAccount == transaction.User.AccountNumber)
+                            {
+                                @transaction.ToAccount
+                            }
+                            else
+                            {
+                                @transaction.FromAccount
+                            }
+                            </span>
+                    }
+                    else
+                    {
+                        <span>Пополнение</span>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
 </div>
