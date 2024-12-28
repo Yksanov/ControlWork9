@@ -1,0 +1,46 @@
+@model ControlWork9.ViewModels.ProviderViewModel
+
+@{
+    ViewData["Title"] = "Provider Index";
+}
+
+<h2>Список поставщиков услуг</h2>
+
+<p>Баланс пользователя: @Model.UserBalance</p>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Название услуги</th>
+        <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var serviceProvider in Model.ServiceProviders)
+    {
+        <tr>
+            <td>@serviceProvider.ServiceName</td>
+            <td>
+                @if (!Model.UserServices.Any(us => us.ServiceProviderId == serviceProvider.Id))
+                {
+                    <form asp-action="Subscribe" method="post" class="d-inline">
+                        <input type="hidden" name="userId" value="@Model.UserId" />
+                        <input type="hidden" name="serviceProviderId" value="@serviceProvider.Id" />
+                        <input type="number" name="personalAccount" placeholder="Личный счёт" required />
+                        <button type="submit" class="btn btn-primary">Подписаться</button>
+                    </form>
+                }
+                else
+                {
+                    <form asp-action="Pay" method="post" class="d-inline">
+                        <input type="hidden" name="userId" value="@Model.UserId" />
+                        <input type="hidden" name="serviceProviderId" value="@serviceProvider.Id" />
+                        <input type="number" name="amount" placeholder="Сумма для оплаты" required />
+                        <button type="submit" class="btn btn-success">Оплатить</button>
+                    </form>
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
