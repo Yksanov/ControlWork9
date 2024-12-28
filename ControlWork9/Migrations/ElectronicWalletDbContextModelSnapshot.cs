@@ -95,6 +95,52 @@ namespace ControlWork9.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("ControlWork9.Models.Provider", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ServiceType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Providers");
+                });
+
+            modelBuilder.Entity("ControlWork9.Models.ServiceProvider", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("ProviderId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ServiceName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProviderId");
+
+                    b.ToTable("ServiceProviders");
+                });
+
             modelBuilder.Entity("ControlWork9.Models.Transaction", b =>
                 {
                     b.Property<int>("Id")
@@ -126,6 +172,35 @@ namespace ControlWork9.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Transactions");
+                });
+
+            modelBuilder.Entity("ControlWork9.Models.UserProvider", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Balance")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("PersonalAccount")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ServiceProviderId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ServiceProviderId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserServices");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
@@ -260,6 +335,17 @@ namespace ControlWork9.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ControlWork9.Models.ServiceProvider", b =>
+                {
+                    b.HasOne("ControlWork9.Models.Provider", "Provider")
+                        .WithMany("ServiceProviders")
+                        .HasForeignKey("ProviderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Provider");
+                });
+
             modelBuilder.Entity("ControlWork9.Models.Transaction", b =>
                 {
                     b.HasOne("ControlWork9.Models.MyUser", "User")
@@ -267,6 +353,25 @@ namespace ControlWork9.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ControlWork9.Models.UserProvider", b =>
+                {
+                    b.HasOne("ControlWork9.Models.ServiceProvider", "ServiceProvider")
+                        .WithMany("UserProviders")
+                        .HasForeignKey("ServiceProviderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ControlWork9.Models.MyUser", "User")
+                        .WithMany("UserProviders")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ServiceProvider");
 
                     b.Navigation("User");
                 });
@@ -320,6 +425,21 @@ namespace ControlWork9.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ControlWork9.Models.MyUser", b =>
+                {
+                    b.Navigation("UserProviders");
+                });
+
+            modelBuilder.Entity("ControlWork9.Models.Provider", b =>
+                {
+                    b.Navigation("ServiceProviders");
+                });
+
+            modelBuilder.Entity("ControlWork9.Models.ServiceProvider", b =>
+                {
+                    b.Navigation("UserProviders");
                 });
 #pragma warning restore 612, 618
         }

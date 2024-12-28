@@ -3,18 +3,21 @@
 <div class="form-container">
     <div id="message"></div>
     <form id="depositForm">
-        <div class="text-danger" asp-validation-summary="ModelOnly"></div>
-        <div class="form-group">
-            <label for="toAccount">Номер счета</label>
-            <input type="number" id="toAccount" name="ToAccount" class="form-control" value="@Model?.ToAccount" required />
-            <span asp-validation-for="ToAccount" class="text-danger"></span>
+        <div class="col-md-4">
+            <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+            <div class="form-group">
+                <label for="toAccount">Номер счета</label>
+                <input type="number" id="toAccount" name="ToAccount" class="form-control" value="@Model?.ToAccount"
+                       required/>
+                <span asp-validation-for="ToAccount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="amount">Сумма пополнения</label>
+                <input type="number" id="amount" name="Amount" class="form-control" value="@Model?.Amount" required/>
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Пополнить</button>
         </div>
-        <div class="form-group">
-            <label for="amount">Сумма пополнения</label>
-            <input type="number" id="amount" name="Amount" class="form-control" value="@Model?.Amount" required />
-            <span asp-validation-for="Amount" class="text-danger"></span>
-        </div>
-        <button type="submit" class="btn btn-primary">Пополнить</button>
     </form>
     <div id="balanceSection">
         <h3>Баланс: @ViewData["Balance"]</h3>
