@@ -18,13 +18,12 @@ public class TransactionController : Controller
         _userManager = userManager;
     }
 
-    
+
     [HttpPost]
     public async Task<IActionResult> Deposit(DepositViewModel model)
     {
         if (ModelState.IsValid)
         {
-            // Поиск пользователя по номеру счета
             MyUser? user = await _userManager.Users.FirstOrDefaultAsync(u => u.AccountNumber == model.ToAccount);
 
             if (user == null)
@@ -32,47 +31,78 @@ public class TransactionController : Controller
                 return NotFound();
             }
 
-            // Создание транзакции
             Transaction transaction = new Transaction()
             {
                 Amount = model.Amount,
                 Type = TransactionType.Deposit,
                 UserId = user.Id,
                 Date = DateTime.Now,
-                FromAccount = user.AccountNumber, 
+                FromAccount = user.AccountNumber,
                 ToAccount = model.ToAccount
             };
 
-            // Использование транзакции базы данных
-            using var dbTransaction = await _context.Database.BeginTransactionAsync();
-            try
+            _context.Transactions.Add(transaction);
+
+            user.Balance += model.Amount;
+
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+
+            ViewData["Balance"] = user.Balance;
+            return PartialView("_DepositFormPartialView", model);
+        }
+        else
+        {
+            ModelState.AddModelError(string.Empty, "Invalid deposit");
+            return PartialView("_DepositFormPartialView", model);
+        }
+    }
+    //-------------------------------------------------
+
+
+    [HttpPost]
+    public async Task<IActionResult> Transfer(TransferViewModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            MyUser? sender = await _userManager.GetUserAsync(User);
+            if (sender == null)
             {
-                _context.Transactions.Add(transaction); // Добавление транзакции в БД
-
-                user.Balance += model.Amount; // Обновление баланса пользователя
-                _context.Users.Update(user);  // Обновление пользователя
-
-                await _context.SaveChangesAsync(); // Сохранение изменений в базе данных
-
-                await dbTransaction.CommitAsync(); // Подтверждение транзакции
-
-                // Передача нового баланса в ViewData
-                ViewData["Balance"] = user.Balance;
-
-                // Возвращение обновленного частичного представления
-                return PartialView("_DepositFormPartialView", model);
+                return Unauthorized();
             }
-            catch
+            MyUser? recipient = await _userManager.Users.FirstOrDefaultAsync(u => u.AccountNumber == model.ToAccount);
+            if (recipient == null)
             {
-                await dbTransaction.RollbackAsync(); // Откат изменений в случае ошибки
-                ModelState.AddModelError(string.Empty, "Ошибка при пополнении баланса");
+                ModelState.AddModelError(string.Empty, "Получатель с указанным номером счета не найден.");
+                return PartialView("_TransferFormPartialView", model);
             }
+            if (sender.Balance < model.Amount)
+            {
+                ModelState.AddModelError(string.Empty, "Недостаточно средств для перевода.");
+                return PartialView("_TransferFormPartialView", model);
+            }
+            Transaction transaction = new Transaction()
+            {
+                Amount = model.Amount,
+                Type = TransactionType.Transfer,
+                FromAccount = sender.AccountNumber,
+                ToAccount = recipient.AccountNumber,
+                Date = DateTime.Now,
+                UserId = sender.Id
+            };
+
+            sender.Balance -= model.Amount;
+            recipient.Balance += model.Amount;
+
+            await _context.Transactions.AddAsync(transaction);
+            await _context.SaveChangesAsync();
+
+            ViewData["Balance"] = sender.Balance;
+
+            return PartialView("_TransferFormPartialView", new TransferViewModel());
         }
 
-        // Если модель недействительна или возникла ошибка
-        ModelState.AddModelError(string.Empty, "Неверные данные для пополнения");
-        return PartialView("_DepositFormPartialView", model);
+        return PartialView("_TransferFormPartialView", model);
     }
 
-    
 }

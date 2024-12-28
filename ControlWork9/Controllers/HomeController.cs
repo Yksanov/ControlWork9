@@ -23,11 +23,7 @@ public class HomeController : Controller
         }
 
         ViewData["AccountNumber"] = user?.AccountNumber;
-            
-        // Отображаем баланс текущего пользователя на главной странице
         ViewData["Balance"] = user.Balance;
-
-        // Проверка на наличие успешных сообщений (например, после перевода)
         ViewBag.SuccessMessage = TempData["SuccessMessage"];
         ViewBag.ErrorMessage = TempData["ErrorMessage"];
 

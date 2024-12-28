@@ -1,12 +1,81 @@
+@using ControlWork9.ViewModels
 @model ControlWork9.ViewModels.DepositViewModel
 
 <div>
     <h3>Баланс: @ViewData["Balance"]</h3>
 </div>
 
-
 <h4>Пополнение счета</h4>
-
 <div id="deposit-container">
     @await Html.PartialAsync("/Views/Transaction/_DepositFormPartialView.cshtml", Model)
 </div>
+
+<hr />
+
+<h4>Перевод средств</h4>
+<div id="transfer-container">
+    @await Html.PartialAsync("/Views/Transaction/_TransferFormPartialView.cshtml", new TransferViewModel())
+</div>
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#depositForm").validate();
+            $("#transferForm").validate();
+
+            $("#depositForm").submit(function (event) {
+                event.preventDefault();
+
+                if ($(this).valid()) {
+                    var formData = $(this).serialize();
+
+                    $.ajax({
+                        url: '@Url.Action("Deposit", "Transaction")',
+                        type: 'POST',
+                        data: formData,
+                        success: function (response) {
+                            $("#deposit-container").html(response);
+                            showNotification('Баланс пополнен');
+                        },
+                        error: function () {
+                            showNotification('Ошибка при пополнении баланса', true);
+                        }
+                    });
+                }
+            });
+            $("#transferForm").submit(function (event) {
+                event.preventDefault();
+
+                if ($(this).valid()) {
+                    var formData = $(this).serialize();
+
+                    $.ajax({
+                        url: '@Url.Action("Transfer", "Transaction")',
+                        type: 'POST',
+                        data: formData,
+                        success: function (response) {
+                            $("#transfer-container").html(response);
+                            showNotification('Перевод средств успешен');
+                        },
+                        error: function () {
+                            showNotification('Ошибка при переводе средств', true);
+                        }
+                    });
+                }
+            });
+        });
+        function showNotification(message, isError = false) {
+            var messageDiv = $('#message');
+            messageDiv.text(message);
+            messageDiv.removeClass('alert-success alert-danger');
+            if (isError) {
+                messageDiv.addClass('alert alert-danger');
+            } else {
+                messageDiv.addClass('alert alert-success');
+            }
+        }
+    </script>
+}
