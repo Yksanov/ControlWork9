@@ -1,0 +1,64 @@
+@model ControlWork9.ViewModels.DepositViewModel
+
+<div class="form-container">
+    <div id="message"></div>
+    <form id="depositForm">
+        <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+        <div class="form-group">
+            <label for="toAccount">Номер счета</label>
+            <input type="number" id="toAccount" name="ToAccount" class="form-control" value="@Model?.ToAccount" required />
+            <span asp-validation-for="ToAccount" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label for="amount">Сумма пополнения</label>
+            <input type="number" id="amount" name="Amount" class="form-control" value="@Model?.Amount" required />
+            <span asp-validation-for="Amount" class="text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-primary">Пополнить</button>
+    </form>
+    <div id="balanceSection">
+        <h3>Баланс: @ViewData["Balance"]</h3>
+    </div>
+</div>
+
+@section Scripts {
+
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    
+    
+    <script>
+        $(document).ready(function () {
+            $("#depositForm").submit(function (event) {
+                event.preventDefault(); 
+
+                if ($(this).valid()) {
+                    var formData = $(this).serialize();
+
+                    $.ajax({
+                        url: '@Url.Action("Deposit", "Transaction")',
+                        type: 'POST',
+                        data: formData,
+                        success: function (response) {
+                            $("#deposit-container").html(response);
+                            showNotification('Баланс пополнен');
+                        },
+                        error: function () {
+                            showNotification('Ошибка при пополнении баланса', true);
+                        }
+                    });
+                }
+            });
+        });
+
+        function showNotification(message, isError = false) {
+            var messageDiv = $('#message');
+            messageDiv.text(message);
+            messageDiv.removeClass('alert-success alert-danger');
+            if (isError) {
+                messageDiv.addClass('alert alert-danger');
+            } else {
+                messageDiv.addClass('alert alert-success');
+            }
+        }
+    </script>
+}

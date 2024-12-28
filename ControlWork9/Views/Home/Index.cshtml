@@ -1,0 +1,12 @@
+@model ControlWork9.ViewModels.DepositViewModel
+
+<div>
+    <h3>Баланс: @ViewData["Balance"]</h3>
+</div>
+
+
+<h4>Пополнение счета</h4>
+
+<div id="deposit-container">
+    @await Html.PartialAsync("/Views/Transaction/_DepositFormPartialView.cshtml", Model)
+</div>
