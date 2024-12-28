@@ -36,7 +36,7 @@ public class TransactionController : Controller
                 Amount = model.Amount,
                 Type = TransactionType.Deposit,
                 UserId = user.Id,
-                Date =DateOnly.FromDateTime(DateTime.Now),
+                Date = DateOnly.FromDateTime(DateTime.Now),
                 FromAccount = user.AccountNumber,
                 ToAccount = model.ToAccount
             };

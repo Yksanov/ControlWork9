@@ -5,7 +5,7 @@ namespace ControlWork9.ViewModels;
 public class DepositViewModel
 {
     [Required]
-    [StringLength(6, MinimumLength = 6, ErrorMessage = "Номер счета должен быть 6 знаков.")]
+    [Range(100000, 999999, ErrorMessage = "Номер счета должен быть 6 знаков.")]
     public int ToAccount { get; set; }
 
     [Required]
