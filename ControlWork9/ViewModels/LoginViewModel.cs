@@ -4,7 +4,7 @@ namespace ControlWork9.ViewModels;
 
 public class LoginViewModel
 {
-    [Required(ErrorMessage = "Почта/Логин не могут быть пустыми")]
+    [Required(ErrorMessage = "Почта/Номер личного счета не могут быть пустыми")]
     public string AccountNumberOrEmail { get; set; }
     [Required(ErrorMessage = "Пароль не может быть пустым")]
     public string Password { get; set; }
