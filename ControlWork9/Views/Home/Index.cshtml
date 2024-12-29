@@ -59,7 +59,12 @@
                         data: formData,
                         success: function (response) {
                             $("#transfer-container").html(response);
-                            showNotification('Перевод средств успешен');
+                            var insufficientFunds = $("#insufficientFundsError").val();
+                            if (insufficientFunds) {
+                                showNotification(insufficientFunds, true);
+                            } else {
+                                showNotification('Перевод средств успешен');
+                            }
                         },
                         error: function () {
                             showNotification('Ошибка при переводе средств', true);

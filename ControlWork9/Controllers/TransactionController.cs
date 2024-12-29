@@ -81,6 +81,7 @@ public class TransactionController : Controller
             if (sender.Balance < model.Amount)
             {
                 ModelState.AddModelError(string.Empty, "Недостаточно средств для перевода.");
+                ViewData["InsufficientFundsError"] = $"У вас недостаточно средств для перевода. Ваш баланс: {sender.Balance}";
                 return PartialView("_TransferFormPartialView", model);
             }
             Transaction transaction = new Transaction()

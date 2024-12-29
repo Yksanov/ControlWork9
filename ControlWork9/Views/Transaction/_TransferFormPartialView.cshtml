@@ -18,6 +18,7 @@
                     <input type="number" id="amount" name="Amount" class="form-control" value="@Model?.Amount" required/>
                     <span asp-validation-for="Amount" class="text-danger"></span>
                 </div>
+                <input type="hidden" id="insufficientFundsError" value="@ViewData["InsufficientFundsError"]" />
                 <button type="submit" class="btn btn-primary mt-3">Перевести</button>
             </form>
         </div>
