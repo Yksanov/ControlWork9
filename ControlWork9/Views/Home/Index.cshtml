@@ -9,10 +9,13 @@
 
 <hr />
 
-<h4>Перевод средств</h4>
-<div id="transfer-container">
-    @await Html.PartialAsync("/Views/Transaction/_TransferFormPartialView.cshtml", new TransferViewModel())
-</div>
+@if (User.Identity.IsAuthenticated)
+{
+    <h4>Перевод средств</h4>
+    <div id="transfer-container">
+        @await Html.PartialAsync("/Views/Transaction/_TransferFormPartialView.cshtml", new TransferViewModel())
+    </div>
+}
 
 
 @section Scripts {

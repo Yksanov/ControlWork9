@@ -14,18 +14,14 @@ public class HomeController : Controller
     {
         _userManager = userManager;
     }
-
-    [AllowAnonymous]
+    
     public async Task<IActionResult> Index()
     {
         var user = await _userManager.GetUserAsync(User);
-        if (user == null)
-        {
-            return RedirectToAction("Login", "Account");
-        }
+        
 
         ViewData["AccountNumber"] = user?.AccountNumber;
-        ViewData["Balance"] = user.Balance;
+        ViewData["Balance"] = user?.Balance;
         ViewBag.SuccessMessage = TempData["SuccessMessage"];
         ViewBag.ErrorMessage = TempData["ErrorMessage"];
 

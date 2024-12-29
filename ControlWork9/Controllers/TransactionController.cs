@@ -1,6 +1,7 @@
 using ControlWork9.Models;
 using ControlWork9.Services;
 using ControlWork9.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -60,6 +61,7 @@ public class TransactionController : Controller
     //-------------------------------------------------
 
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> Transfer(TransferViewModel model)
     {
