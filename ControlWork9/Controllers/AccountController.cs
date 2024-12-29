@@ -30,11 +30,15 @@ public class AccountController : Controller
     {
         if (ModelState.IsValid)
         {
-            MyUser user = await _userManager.FindByEmailAsync(model.UserNameOrEmail);
-
+            MyUser user = await _userManager.FindByEmailAsync(model.AccountNumberOrEmail);
+            
             if (user == null)
             {
-                user = await _userManager.FindByNameAsync(model.UserNameOrEmail);
+                int accountNumber;
+                if (int.TryParse(model.AccountNumberOrEmail, out accountNumber))
+                {
+                    user = await _userManager.GetAccountNumber(accountNumber);
+                }
             }
 
             if (user == null)
@@ -55,7 +59,7 @@ public class AccountController : Controller
                 return RedirectToAction("Index", "Home");
             }
 
-            ModelState.AddModelError(string.Empty, "Неправильные логин или пароль");
+            ModelState.AddModelError(string.Empty, "Неправильные email/номер личного счета или пароль");
         }
 
         return View(model);

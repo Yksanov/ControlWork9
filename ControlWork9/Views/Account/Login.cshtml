@@ -4,7 +4,7 @@
     ViewBag.Title = "login";
 }
 
-<h4 class="text-center">Вход на сайт</h4>
+<h4 class="text-center">Вход на личного аккаунта</h4>
 <div class="row">
     <div class="col-md-4 mx-auto">
         <div class="card border-2">
@@ -12,8 +12,8 @@
                 <form asp-action="Login" asp-controller="Account" asp-route-returnUrl="@Model.ReturnUrl" asp-anti-forgery="true">
                     <div class="text-danger" asp-validation-summary="ModelOnly"></div>
                     <div class="mb-3">
-                        <input asp-for="UserNameOrEmail" type="text" class="form-control" placeholder="Логин или эл. адрес">
-                        <span asp-validation-for="UserNameOrEmail" class="text-danger"></span>
+                        <input asp-for="AccountNumberOrEmail" type="text" class="form-control" placeholder="Номер личного счета или эл. адрес">
+                        <span asp-validation-for="AccountNumberOrEmail" class="text-danger"></span>
                     </div>
                     <div class="mb-2">
                         <label asp-for="Password" class="form-label">Введите пароль</label>

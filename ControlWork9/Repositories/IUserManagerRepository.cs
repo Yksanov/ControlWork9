@@ -1,5 +1,7 @@
+using System.Linq.Expressions;
 using System.Security.Claims;
 using ControlWork9.Models;
+using ControlWork9.ViewModels;
 using Microsoft.AspNetCore.Identity;
 
 namespace ControlWork9.Repositories;
@@ -13,5 +15,6 @@ public interface IUserManagerRepository
     public Task<bool> IsInRoleAsync(MyUser user, string role);
     public Task<MyUser?> FindByEmailAsync(string email);
     public Task<MyUser?> FindByNameAsync(string userName);
+    public Task<MyUser?> GetAccountNumber(int AccountNumber);
     public Task<IdentityResult> AddToRoleAsync(MyUser user, string role);
 }

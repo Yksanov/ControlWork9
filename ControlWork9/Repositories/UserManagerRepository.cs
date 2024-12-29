@@ -1,6 +1,9 @@
+using System.Linq.Expressions;
 using System.Security.Claims;
 using ControlWork9.Models;
+using ControlWork9.ViewModels;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace ControlWork9.Repositories;
 
@@ -45,6 +48,11 @@ public class UserManagerRepository : IUserManagerRepository
     public async Task<MyUser?> FindByNameAsync(string userName)
     {
         return await _userManager.FindByNameAsync(userName);
+    }
+
+    public async Task<MyUser?> GetAccountNumber(int accountNumber)
+    {
+        return await _userManager.Users.FirstOrDefaultAsync(u => u.AccountNumber == accountNumber);
     }
 
     public async Task<IdentityResult> AddToRoleAsync(MyUser user, string role)
