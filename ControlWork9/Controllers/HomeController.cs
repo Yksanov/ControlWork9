@@ -1,5 +1,6 @@
 using ControlWork9.Models;
 using ControlWork9.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +15,7 @@ public class HomeController : Controller
         _userManager = userManager;
     }
 
+    [AllowAnonymous]
     public async Task<IActionResult> Index()
     {
         var user = await _userManager.GetUserAsync(User);
@@ -27,7 +29,7 @@ public class HomeController : Controller
         ViewBag.SuccessMessage = TempData["SuccessMessage"];
         ViewBag.ErrorMessage = TempData["ErrorMessage"];
 
-        var model = new DepositViewModel();
+        DepositViewModel model = new DepositViewModel();
 
         return View(model);
     }

@@ -1,0 +1,40 @@
+@model MyUser
+
+@{
+    ViewBag.Title = Model.Email;
+}
+<h4 class="text-center mb-4">Личный кабинет</h4>
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["Message"]
+    </div>
+}
+<div class="row">
+    <div class="col-5 mx-auto">
+        <table class="table table-bordered bg-secondary">
+            <tbody>
+            <tr>
+                <th>№</th>
+                <td>@Model.Id</td>
+            </tr>
+            <tr>
+                <th>Почта</th>
+                <td>@Model.Email</td>
+            </tr>
+            <tr>
+                <th>UserName</th>
+                <td>@Model.UserName</td>
+            </tr>
+            <tr>
+                <th>Номер личного счета</th>
+                <td>@Model.AccountNumber</td>
+            </tr>
+            <tr>
+                <th>Баланс</th>
+                <td>@Model.Balance</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

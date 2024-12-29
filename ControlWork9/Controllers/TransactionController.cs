@@ -143,4 +143,20 @@ public class TransactionController : Controller
     }
 
 
+    public async Task<IActionResult> Profile(int? id)
+    {
+        var user = await _userManager.GetUserAsync(User);
+    
+        if (id != null)
+        {
+            user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == id);
+        }
+
+        if (user == null)
+        {
+            return NotFound();
+        }
+        return View(user);
+    }
+
 }

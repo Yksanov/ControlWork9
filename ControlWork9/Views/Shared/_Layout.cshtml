@@ -23,16 +23,13 @@
 
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1 d-flex justify-content-end">
-                    <div class="d-flex align-items-center">
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <h6 class="navbar-text me-3 text-dark">Уникальный номер: @ViewData["AccountNumber"]</h6>
-                        }
-                    </div>
+                    
                     @if (User.Identity.IsAuthenticated)
                     {
+                        <h6 class="navbar-text me-3 text-dark">Уникальный номер: @ViewData["AccountNumber"]</h6>
+                    
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-action="TransactionHistory" asp-controller="Transaction">Журнал</a>
+                            <a class="nav-link text-dark" asp-action="TransactionHistory" asp-controller="Transaction">Журнал транзакций</a>
                         </li>
                         
                         <li class="nav-item">
@@ -52,6 +49,9 @@
                                 </button>
 
                                 <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="nav-link text-dark dropdown-item" asp-route-id="" asp-controller="Transaction" asp-action="Profile">Профиль</a>
+                                    </li>
                                     <li>
                                         <form asp-action="LogOut" asp-controller="Account" class="d-inline">
                                             <input type="submit" class="nav-link text-dark border-0 bg-white dropdown-item"value="Выйти"/>
