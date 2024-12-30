@@ -131,7 +131,7 @@ public class TransactionController : Controller
         {
             transactionsQuery = transactionsQuery.Where(t => t.Date <= dateTo.Value);
         }
-        
+        ViewData["AccountNumber"] = user?.AccountNumber;
         var transactions = await transactionsQuery
             .OrderByDescending(t => t.Date)
             .ToListAsync();
@@ -159,6 +159,7 @@ public class TransactionController : Controller
         {
             return NotFound();
         }
+        ViewData["AccountNumber"] = user?.AccountNumber;
         return View(user);
     }
 

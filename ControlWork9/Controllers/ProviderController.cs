@@ -31,7 +31,7 @@ public class ProviderController : Controller
         {
             return NotFound();
         }
-
+        ViewData["AccountNumber"] = user?.AccountNumber;
         var serviceProviders = await _context.ServiceProviders.ToListAsync();
         var userServices = await _context.UserServices
             .Where(us => us.UserId == userId)
